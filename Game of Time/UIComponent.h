@@ -47,8 +47,12 @@ public:
 
 			SDL_Event e;
 			SDL_PollEvent(&e);
-			if (e.type == SDL_MOUSEBUTTONDOWN) {
-				onClick();
+			switch (e.type) {
+			case SDL_MOUSEBUTTONDOWN:
+				if (Utils::isMouseOver(&position)) {
+					printf("clicked!\n");
+					this->onClick();
+				}
 			}
 		} else {
 			SDL_Color white = { 255, 255, 255, 255 };

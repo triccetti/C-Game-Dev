@@ -94,10 +94,10 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 }
 
 void Game::handleEvents() {
-	//SDL_PollEvent(&event);
-	while (SDL_PollEvent(&event) != 0) {
-		printf("event: %d\n", event.type);
+	SDL_PollEvent(&event);
+	//while (SDL_PollEvent(&event) != 0) {
 		switch (event.type) {
+		printf("event: %d\n", event.type);
 		case SDL_QUIT:
 			running = false;
 			break;
@@ -112,7 +112,7 @@ void Game::handleEvents() {
 		default:
 			break;
 		}
-	}
+	//}
 }
 
 void Game::update() {
