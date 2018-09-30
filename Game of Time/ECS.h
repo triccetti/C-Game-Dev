@@ -10,6 +10,8 @@
 #include <bitset>
 #include <array>
 #include <utility>
+#include <stack>
+#include <deque>
 #include <functional>
 #include "SDL.h"
 
@@ -68,8 +70,8 @@ public:
 		return clickable;
 	}
 
-	std::function<void()> onClick;
-	std::function<void()> onKeyPressed;
+	//std::function<void()> onClick;
+	//std::function<void()> onKeyPressed;
 
 	Entity * entity;
 
@@ -288,11 +290,21 @@ public:
 	*/
 	template<typename T> void changeScene() {
 		currentSceneID = getSceneTypeID<T>();
+		sceneStack.push(currentSceneID);
+	}
+
+	void prevScene() {
+		printf("%d", sceneStack.empty());
+		if (!sceneStack.empty()) {
+			currentSceneID = sceneStack.top();
+			sceneStack.pop();
+		}
 	}
 
 private:
 	std::vector<std::unique_ptr<Scene>> scenes;
 	std::vector<std::unique_ptr<Entity>> entities;
+	std::stack<SceneID> sceneStack;
 
 	SceneArray sceneArray;
 	SceneBitSet sceneBitset;

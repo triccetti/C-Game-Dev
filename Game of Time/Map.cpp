@@ -1,9 +1,8 @@
 #include "Map.h"
-#include "Game.h"
-#include "ECS.h"
+#include "ECS.h" 
 #include "Components.h"
 
-Map::Map(std::string texId, int mScale) {
+Map::Map(GameManager* man, std::string texId, int mScale) : manager(man) {
 	mapScale = mScale;
 	textureId = texId;
 }
@@ -47,6 +46,6 @@ void Map::LoadMap(std::string path) {
 }
 
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos) {
-	//shared_ptr<Entity> tile = Game::entityManager->CreateEntity();
+	//Entity * tile = &manager->createEntity();
 	//tile->addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, scaledSize, textureId);
 }

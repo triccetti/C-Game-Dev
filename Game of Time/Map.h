@@ -1,16 +1,16 @@
-#pragma once
-//#include "Game.h"
+#pragma once 
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include <iomanip>
- 
+
+class GameManager;
 
 class Map {
 public:
-	Map(std::string texId, int mScale);
+	Map(GameManager * man, std::string texId, int mScale);
 	~Map();
 
 	void LoadMap(std::string path);
@@ -19,6 +19,8 @@ public:
 	int getWidth() { return mapWidth; }
 
 private:
+	GameManager * manager;
+
 	std::string textureId;
 	int mapScale;
 	int tileSize;

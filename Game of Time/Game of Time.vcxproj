@@ -150,11 +150,12 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="SpriteComponent.h" />
-    <ClInclude Include="TextBoxComponent.h" />
+    <ClInclude Include="UIButton.h" />
+    <ClInclude Include="UITextbox.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TileComponent.h" />
     <ClInclude Include="TransformComponent.h" />
-    <ClInclude Include="UIComponent.h" />
+    <ClInclude Include="UILabel.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>

@@ -2,11 +2,11 @@
 
 void Component::setOnClick(std::function<void()> func) {
 	clickable = true;
-	onClick = func;
+//	onClick = func;
 }
 
 void Component::setOnKeyPressed(std::function<void()> func) {
-	onKeyPressed = func;
+	//onKeyPressed = func;
 }
 
 /*

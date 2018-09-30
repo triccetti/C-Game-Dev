@@ -22,6 +22,9 @@
     <Filter Include="Resource Files\Assets">
       <UniqueIdentifier>{87ebdd89-fb17-47cb-b2e5-cfb933f9d8e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Components\UI Components">
+      <UniqueIdentifier>{c4faccda-b6f0-4d93-b0d6-bca07984df16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -74,9 +77,6 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UIComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="TransformComponent.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
@@ -107,11 +107,17 @@
     <ClInclude Include="ECS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextBoxComponent.h">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UILabel.h">
+      <Filter>Header Files\Components\UI Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UITextbox.h">
+      <Filter>Header Files\Components\UI Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIButton.h">
+      <Filter>Header Files\Components\UI Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

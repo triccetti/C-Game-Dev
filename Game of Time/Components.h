@@ -6,5 +6,8 @@
 #include "TileComponent.h"
 #include "ControllerComponent.h"
 #include "TransformComponent.h"
-#include "UIComponent.h"
-#include "TextBoxComponent.h"
+
+// UI Components 
+#include "UILabel.h"
+#include "UITextbox.h"
+#include "UIButton.h"

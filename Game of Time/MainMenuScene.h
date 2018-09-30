@@ -1,6 +1,6 @@
 #pragma once
+#include "Scenes.h" 
 #include "Components.h"
-#include "Scenes.h"
 #include "GameSelectScene.h"
 
 class MainMenuScene : public Scene {
@@ -13,13 +13,13 @@ public:
 		playGame = &manager->createEntity<MainMenuScene>();
 		exitGame = &manager->createEntity<MainMenuScene>();
 
-		playGame->addComponent<UIComponent>(Game::camera.w / 2, Game::camera.h / 2 - 46, "Play", "vt323", WHITE, false);
-		playGame->getComponent<UIComponent>().setOnClick([&]() {
+		playGame->addComponent<UILabel>(Game::camera.w / 2, Game::camera.h / 2 - 46, "Play", "vt323", WHITE);
+		playGame->addComponent<UIButton>([&]() {
 			manager->changeScene<GameSelectScene>();
 		});
 
-		exitGame->addComponent<UIComponent>(Game::camera.w / 2, Game::camera.h / 2, "Exit", "vt323", WHITE, false);
-		exitGame->getComponent<UIComponent>().setOnClick([&]() {
+		exitGame->addComponent<UILabel>(Game::camera.w / 2, Game::camera.h / 2, "Exit", "vt323", WHITE);
+		exitGame->addComponent<UIButton>([&]() {
 			exit(0);
 		});
 	}

@@ -13,16 +13,17 @@ public:
 		playerSkin->addComponent<SpriteComponent>("skin" + std::to_string(skin));
 
 		nextSkin = &manager->createEntity<CharacterCreateScene>();
-		nextSkin->addComponent<UIComponent>(195, 140, "->", "vt323", WHITE, true);
-		nextSkin->getComponent<UIComponent>().setOnClick([&]() {
+		nextSkin->addComponent<UILabel>(195, 140, "Skin", "vt323", WHITE);
+		nextSkin->addComponent<UIButton>([&]() {
 			printf("Skin selector\n");
 			skin++;
 			if (skin >= 6) skin = 1;
 			playerSkin->getComponent<SpriteComponent>().setTex("skin" + std::to_string(skin));
 		});
+
 		prevSkin = &manager->createEntity<CharacterCreateScene>();
-		prevSkin->addComponent<UIComponent>(65, 140, "<-", "vt323", WHITE, true);
-		prevSkin->getComponent<UIComponent>().setOnClick([&]() {
+		prevSkin->addComponent<UILabel>(65, 140, "<-", "vt323", WHITE);
+		prevSkin->addComponent<UIButton>([&]() {
 			skin--;
 			if (skin <= 0) skin = 5;
 			playerSkin->getComponent<SpriteComponent>().setTex("skin" + std::to_string(skin));
@@ -33,29 +34,27 @@ public:
 		playerEyes->addComponent<SpriteComponent>("eyes" + std::to_string(eye));
 
 		nextEyes = &manager->createEntity<CharacterCreateScene>();
-		nextEyes->addComponent<UIComponent>(195, 180, "->", "vt323", WHITE, true);
-		nextEyes->getComponent<UIComponent>().setOnClick([&]() {
+		nextEyes->addComponent<UILabel>(195, 180, "->", "vt323", WHITE);
+		nextEyes->addComponent<UIButton>([&]() {
 			eye++;
 			if (eye >= 6) eye = 1;
 			playerEyes->getComponent<SpriteComponent>().setTex("eyes" + std::to_string(eye));
 		});
 		prevEyes = &manager->createEntity<CharacterCreateScene>();
-		prevEyes->addComponent<UIComponent>(65, 180, "<-", "vt323", WHITE, true);
-		prevEyes->getComponent<UIComponent>().setOnClick([&]() {
+		prevEyes->addComponent<UILabel>(65, 180, "<-", "vt323", WHITE);
+		prevEyes->addComponent<UIButton>([&]() {
 			eye--;
 			if (eye <= 0) eye = 5;
 			playerEyes->getComponent<SpriteComponent>().setTex("eyes" + std::to_string(eye));
 		});
 
 		name = &manager->createEntity<CharacterCreateScene>();
-		name->addComponent<TextBoxComponent>(50, 550, "vt323", WHITE);
-		name->getComponent<TextBoxComponent>().setOnClick([&]() {
-			name->getComponent<TextBoxComponent>().isFocused = true;
-		});
+		name->addComponent<UILabel>(50, 550, "Name", "vt323", WHITE);
+		name->addComponent<TextBoxComponent>(100, 550, "vt323", WHITE);
 
 		create = &manager->createEntity<CharacterCreateScene>();
-		create->addComponent<UIComponent>(600, 550, "CREATE", "vt323", WHITE, true);
-		create->getComponent<UIComponent>().setOnClick([&]() {
+		create->addComponent<UILabel>(600, 550, "CREATE", "vt323", WHITE);
+		create->addComponent<UIButton>([&]() {
 			SDL_Texture* playerTexture = createPlayerTexture();
 			// get all the currently selected stuff and go!
 		});

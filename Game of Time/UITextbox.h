@@ -10,72 +10,72 @@
 
 class TextBoxComponent : public Component {
 private:
-
-	typedef void(*eventFunction)();
+	std::function<void()> onClick;
 
 	SDL_Rect position;
+	SDL_Rect textBox;
+
 	std::string inputText;
 	std::string labelFont;
-	SDL_Color textColor;
 	SDL_Texture* labelTexture;
+	SDL_Color textColor;
 
 public:
 	bool isFocused = false;
 
 	TextBoxComponent(int xpos, int ypos, std::string font, SDL_Color& color) : labelFont(font), textColor(color) {
-		position.x = xpos;
-		position.y = ypos;
+		textBox.x = xpos;
+		textBox.y = ypos;
+		textBox.h = 25;
+		textBox.w = 150;
+		inputText = "";
+
+		onClick = [&]() {
+			printf("FOCUSED!\n");
+		};
+
 		SetLabelText(inputText, labelFont);
 	}
 
-	~TextBoxComponent() {
-		SDL_StopTextInput();
+	~TextBoxComponent() { 
 	}
-
-	void init() override {
-		inputText = "";
-	}
-
+	
 	void update() override {
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-
-		SDL_Rect * pos = TextBoxComponent::getPosition();
-		//if (x <= pos->x + pos->w && x >= pos->x
-		//	&& y <= pos->y + pos->h && y >= pos->y) {
-		//	SDL_Color gray = { 115, 115, 115, 255 };
-		//	TextBoxComponent::setTextColor(gray);
-
 		SDL_Event e;
 		SDL_WaitEvent(&e);
-		//if (e.type == SDL_MOUSEBUTTONDOWN) {
-		//	entity->onClick();
-		//}
+		if (e.type == SDL_MOUSEBUTTONDOWN) {
+			if (Utils::isMouseOver(&textBox)) {
+				isFocused = true;
+			}
+			else {
+				isFocused = false;
+			}
+		}
+
 		if (e.type == SDL_KEYDOWN) {
 			if (e.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0) {
 				inputText = inputText.substr(0, inputText.length() - 1);
-			} else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL) {
-				SDL_SetClipboardText(inputText.c_str());
-			} else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL) {
-				inputText = SDL_GetClipboardText();
+				printf("%s\n", inputText.c_str());
 			}
-		} else if (e.type == SDL_TEXTINPUT) {
+		}
+		else if (e.type == SDL_TEXTINPUT) {
 			if (!((e.text.text[0] == 'c' || e.text.text[0] == 'C')
 				&& (e.text.text[0] == 'v' || e.text.text[0] == 'V')
 				&& SDL_GetModState() & KMOD_CTRL)) {
 				inputText += e.text.text;
+				printf("%s\n", inputText.c_str());
 			}
 		}
 		SetLabelText(inputText, labelFont);
-		//} else {
-		//	SDL_Color g = { 0, 255, 255, 255 };
-		//	TextBoxComponent::setTextColor(g);
-		//	isFocused = false;
-		//}
 	}
 
-	void render() override {
-		SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &position);
+	void render() override { 
+		// Set render color to blue ( rect will be rendered in this color )
+		SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
+		// Render rect
+		SDL_RenderDrawRect(Game::renderer, &textBox);
+		SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, 255);
+		SDL_RenderCopy(Game::renderer, labelTexture, nullptr, &textBox);
 	}
 
 	SDL_Rect * getPosition() {
