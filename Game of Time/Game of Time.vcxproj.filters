@@ -119,6 +119,9 @@
     <ClInclude Include="UIButton.h">
       <Filter>Header Files\Components\UI Components</Filter>
     </ClInclude>
+    <ClInclude Include="UISelector.h">
+      <Filter>Header Files\Components\UI Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\map.png">

@@ -20,7 +20,7 @@ SDL_Event Game::event;
 bool Game::running = false;
 
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
-Vector2D Game::clickPos;
+SDL_Rect Game::clickPos;
 
 Game::Game() {}
 
@@ -94,25 +94,14 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 }
 
 void Game::handleEvents() {
-	SDL_PollEvent(&event);
-	//while (SDL_PollEvent(&event) != 0) {
-		switch (event.type) {
-		printf("event: %d\n", event.type);
-		case SDL_QUIT:
-			running = false;
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			int x, y;
-			SDL_GetMouseState(&x, &y);
-			clickPos = Vector2D(static_cast<float>(x), static_cast<float>(y));
-			break;
-		case SDL_KEYDOWN:
-			//printf("Type: %d\n", event.type);
-			break;
-		default:
-			break;
-		}
-	//}
+	SDL_WaitEvent(&event);
+	switch (event.type) {
+	case SDL_QUIT:
+		running = false;
+		break;
+	default:
+		break;
+	}
 }
 
 void Game::update() {

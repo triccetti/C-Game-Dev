@@ -37,41 +37,41 @@ public:
 		SetLabelText(inputText, labelFont);
 	}
 
-	~TextBoxComponent() { 
+	~TextBoxComponent() {
 	}
-	
+
 	void update() override {
-		SDL_Event e;
-		SDL_WaitEvent(&e);
-		if (e.type == SDL_MOUSEBUTTONDOWN) {
+		if (Game::event.type == SDL_MOUSEBUTTONDOWN) {
 			if (Utils::isMouseOver(&textBox)) {
 				isFocused = true;
-			}
-			else {
+			} else {
 				isFocused = false;
 			}
 		}
 
-		if (e.type == SDL_KEYDOWN) {
-			if (e.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0) {
+		if (Game::event.type == SDL_KEYDOWN) {
+			if (Game::event.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0) {
 				inputText = inputText.substr(0, inputText.length() - 1);
 				printf("%s\n", inputText.c_str());
 			}
-		}
-		else if (e.type == SDL_TEXTINPUT) {
-			if (!((e.text.text[0] == 'c' || e.text.text[0] == 'C')
-				&& (e.text.text[0] == 'v' || e.text.text[0] == 'V')
+		} else if (Game::event.type == SDL_TEXTINPUT) {
+			if (!((Game::event.text.text[0] == 'c' || Game::event.text.text[0] == 'C')
+				&& (Game::event.text.text[0] == 'v' || Game::event.text.text[0] == 'V')
 				&& SDL_GetModState() & KMOD_CTRL)) {
-				inputText += e.text.text;
+				inputText += Game::event.text.text;
 				printf("%s\n", inputText.c_str());
 			}
 		}
 		SetLabelText(inputText, labelFont);
 	}
 
-	void render() override { 
+	void render() override {
 		// Set render color to blue ( rect will be rendered in this color )
-		SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
+		if (isFocused) {
+			SDL_SetRenderDrawColor(Game::renderer, 115, 115, 115, 255);
+		} else {
+			SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
+		}
 		// Render rect
 		SDL_RenderDrawRect(Game::renderer, &textBox);
 		SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, 255);

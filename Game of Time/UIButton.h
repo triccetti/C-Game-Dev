@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include "ECS.h"
 #include "AssetManager.h"
@@ -16,7 +16,7 @@ private:
 	SDL_Rect srcRect, destRect;
 
 	UILabel* label;
-	
+
 	bool isTextButton = false;
 	bool isHover = false;
 
@@ -39,7 +39,7 @@ public:
 
 		srcRect.x = srcX;
 		srcRect.y = srcY;
-		srcRect.w = srcRect.h = tileSize; 
+		srcRect.w = srcRect.h = tileSize;
 		destRect.w = destRect.h = scale;
 
 		buttonTexture = Game::assets->GetTexture(buttonImg);
@@ -59,32 +59,29 @@ public:
 	}
 
 	void update() override {
-		if (Utils::isMouseOver(&position)) {
+		if (Game::event.type == SDL_MOUSEBUTTONDOWN && Utils::isMouseOver(&position)) {
 			isHover = true;
-			if (isTextButton) {
-				SDL_Color gray = { 115, 115, 115, 255 };
-				label->setTextColor(gray);
-			}
-			SDL_Event e;
-			SDL_PollEvent(&e);
-			if(e.type == SDL_MOUSEBUTTONDOWN) { 
-				printf("clicked!\n");
-				onClick();
-			}
-		} else {
+			printf("clicked!\n");
+			onClick();
+		}
+		else if (Utils::isMouseOver(&position)) {
+			isHover = true;
+			SDL_Color white = { 115, 115, 115, 255 };
+			label->setTextColor(white);
+		}
+		else {
 			isHover = false;
-			if (isTextButton) {
-				SDL_Color white = { 255,255,255, 255 };
-				label->setTextColor(white);
-			} 
+			SDL_Color white = { 255,255,255, 255 };
+			label->setTextColor(white);
 		}
 	}
 
-	void render() override { 
+	void render() override {
 		if (!isTextButton) {
 			if (isHover) {
 				TextureManager::RenderTexture(hoverTexture, srcRect, destRect, SDL_FLIP_NONE);
-			} else {
+			}
+			else {
 				TextureManager::RenderTexture(buttonTexture, srcRect, destRect, SDL_FLIP_NONE);
 			}
 		}

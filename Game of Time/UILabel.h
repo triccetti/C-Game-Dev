@@ -14,7 +14,7 @@ class UILabel : public Component {
 private:
 	//SpriteComponent * sprite;
 
-	//typedef void(*eventFunction)(); 
+	//typedef void(*eventFunction)();
 
 	SDL_Rect position;
 	std::string labelText;

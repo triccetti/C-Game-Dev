@@ -7,7 +7,8 @@
 #include "ControllerComponent.h"
 #include "TransformComponent.h"
 
-// UI Components 
+// UI Components
 #include "UILabel.h"
 #include "UITextbox.h"
 #include "UIButton.h"
+#include "UISelector.h"
