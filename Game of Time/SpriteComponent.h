@@ -27,7 +27,7 @@ private:
 	int speed = 120;
 	int frames = 0;
 	int delay = 0;
-	int lastTick = 0;
+	int elapsedTime = 0;
 
 	std::string currAnimName = "";
 
@@ -72,24 +72,14 @@ public:
 	void update() override {
 		if (animated) {
 			totalFrames = (textureWidth / transform->width);
-			int currTick = static_cast<int>(SDL_GetTicks());
-			if (delay > 0) {
-				if (lastTick == 0) {
-					lastTick = currTick;
-					if (currAnimName == "front-blink") {
-						printf("last tick %d\n", currTick);
-					}
-				} else if (currTick < lastTick + delay) {
-					currTick = lastTick;
-					if (currAnimName == "front-blink") {
-						printf("current tick: u%d\n", currTick);
-					}
-				} 
-			} else {
-				currTick = static_cast<int>(SDL_GetTicks());
+			int currTime = static_cast<int>(SDL_GetTicks());
+			if (elapsedTime == 0) {
+				elapsedTime = currTime;
 			}
-
-			int col = (static_cast<int>((currTick / speed) % frames) + animationIndex) % totalFrames;
+			if (elapsedTime < currTime - delay) {
+				elapsedTime = currTime + delay;
+			}
+			int col = (static_cast<int>((elapsedTime / speed) % frames) + animationIndex) % totalFrames;
 
 			srcRect.x = col * transform->width;
 		}

@@ -37,10 +37,10 @@ public:
 		SpriteComponent * skin = &player->addComponent<SpriteComponent>(playerID, true);
 		SpriteComponent * eye = &player->addComponent<SpriteComponent>(eyesID, true);
 
-		eye->addAnimation("front-blink", Animation(0, 4, 120, 400));
-		eye->addAnimation("right-blink", Animation(4, 4, 120, 400));
-		eye->addAnimation("none", Animation(8, 4, 120, 400));
-		eye->addAnimation("left-blink", Animation(12, 4, 120, 400));
+		eye->addAnimation("front-blink", Animation(0, 4, 120, 500));
+		eye->addAnimation("right-blink", Animation(4, 4, 120, 500));
+		eye->addAnimation("none", Animation(8, 4, 120, 500));
+		eye->addAnimation("left-blink", Animation(12, 4, 120, 500));
 
 		skin->addAnimation("front-walk", Animation(0, 4, 120, 0));
 		skin->addAnimation("right-walk", Animation(4, 4, 120, 0));
