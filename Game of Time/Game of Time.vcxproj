@@ -125,7 +125,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Assets\map.mmap" />
+    <None Include="Assets\map.tmx" />
     <None Include="packages.config" />
+    <None Include="TMXLoader\RapidXML\manual.html" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
@@ -141,6 +143,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="CharacterCreateScene.h" />
+    <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="Components.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="ECS.h" />
@@ -148,6 +151,7 @@
     <ClInclude Include="GameSelectScene.h" />
     <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="PresentFarmScene.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="UIButton.h" />
@@ -161,7 +165,6 @@
     <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Assets\character.png" />
     <Image Include="Assets\droopyEyes.png" />
     <Image Include="Assets\eyes.png" />
     <Image Include="Assets\eyes1.png" />
@@ -178,6 +181,7 @@
     <Image Include="Assets\skin4.png" />
     <Image Include="Assets\skin5.png" />
     <Image Include="Assets\skins.png" />
+    <Image Include="Assets\terrain.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Assets\VT323-Regular.ttf" />
@@ -187,7 +191,6 @@
     <Import Project="..\packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets" Condition="Exists('..\packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" />
     <Import Project="..\packages\sdl2.2.0.5\build\native\sdl2.targets" Condition="Exists('..\packages\sdl2.2.0.5\build\native\sdl2.targets')" />
     <Import Project="..\packages\libjpeg.redist.9.0.1.4\build\native\libjpeg.redist.targets" Condition="Exists('..\packages\libjpeg.redist.9.0.1.4\build\native\libjpeg.redist.targets')" />
-    <Import Project="..\packages\libpng.redist.1.6.19.1\build\native\libpng.redist.targets" Condition="Exists('..\packages\libpng.redist.1.6.19.1\build\native\libpng.redist.targets')" />
     <Import Project="..\packages\libtiff.redist.4.0.6.2\build\native\libtiff.redist.targets" Condition="Exists('..\packages\libtiff.redist.4.0.6.2\build\native\libtiff.redist.targets')" />
     <Import Project="..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets" Condition="Exists('..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets')" />
     <Import Project="..\packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets" Condition="Exists('..\packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets')" />
@@ -201,6 +204,11 @@
     <Import Project="..\packages\sdl2.new.2.0.8\build\native\sdl2.new.targets" Condition="Exists('..\packages\sdl2.new.2.0.8\build\native\sdl2.new.targets')" />
     <Import Project="..\packages\vii.SDL2_image.redist.2.0.3\build\native\vii.SDL2_image.redist.targets" Condition="Exists('..\packages\vii.SDL2_image.redist.2.0.3\build\native\vii.SDL2_image.redist.targets')" />
     <Import Project="..\packages\vii.SDL2_image.2.0.3\build\native\vii.SDL2_image.targets" Condition="Exists('..\packages\vii.SDL2_image.2.0.3\build\native\vii.SDL2_image.targets')" />
+    <Import Project="..\packages\libpng.redist.1.6.28.1\build\native\libpng.redist.targets" Condition="Exists('..\packages\libpng.redist.1.6.28.1\build\native\libpng.redist.targets')" />
+    <Import Project="..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" />
+    <Import Project="..\packages\libpng.1.6.28.1\build\native\libpng.targets" Condition="Exists('..\packages\libpng.1.6.28.1\build\native\libpng.targets')" />
+    <Import Project="..\packages\tmxlite_native.redist.1.0.2\build\native\tmxlite_native.redist.targets" Condition="Exists('..\packages\tmxlite_native.redist.1.0.2\build\native\tmxlite_native.redist.targets')" />
+    <Import Project="..\packages\tmxlite_native.1.0.2\build\native\tmxlite_native.targets" Condition="Exists('..\packages\tmxlite_native.1.0.2\build\native\tmxlite_native.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -209,7 +217,6 @@
     <Error Condition="!Exists('..\packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sdl2.redist.2.0.5\build\native\sdl2.redist.targets'))" />
     <Error Condition="!Exists('..\packages\sdl2.2.0.5\build\native\sdl2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sdl2.2.0.5\build\native\sdl2.targets'))" />
     <Error Condition="!Exists('..\packages\libjpeg.redist.9.0.1.4\build\native\libjpeg.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libjpeg.redist.9.0.1.4\build\native\libjpeg.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\libpng.redist.1.6.19.1\build\native\libpng.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng.redist.1.6.19.1\build\native\libpng.redist.targets'))" />
     <Error Condition="!Exists('..\packages\libtiff.redist.4.0.6.2\build\native\libtiff.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libtiff.redist.4.0.6.2\build\native\libtiff.redist.targets'))" />
     <Error Condition="!Exists('..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libwebp.v140.redist.0.5.0.1\build\native\libwebp.v140.redist.targets'))" />
     <Error Condition="!Exists('..\packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sdl2.v140.redist.2.0.4\build\native\sdl2.v140.redist.targets'))" />
@@ -223,5 +230,10 @@
     <Error Condition="!Exists('..\packages\sdl2.new.2.0.8\build\native\sdl2.new.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\sdl2.new.2.0.8\build\native\sdl2.new.targets'))" />
     <Error Condition="!Exists('..\packages\vii.SDL2_image.redist.2.0.3\build\native\vii.SDL2_image.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\vii.SDL2_image.redist.2.0.3\build\native\vii.SDL2_image.redist.targets'))" />
     <Error Condition="!Exists('..\packages\vii.SDL2_image.2.0.3\build\native\vii.SDL2_image.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\vii.SDL2_image.2.0.3\build\native\vii.SDL2_image.targets'))" />
+    <Error Condition="!Exists('..\packages\libpng.redist.1.6.28.1\build\native\libpng.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng.redist.1.6.28.1\build\native\libpng.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v120.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
+    <Error Condition="!Exists('..\packages\libpng.1.6.28.1\build\native\libpng.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\libpng.1.6.28.1\build\native\libpng.targets'))" />
+    <Error Condition="!Exists('..\packages\tmxlite_native.redist.1.0.2\build\native\tmxlite_native.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\tmxlite_native.redist.1.0.2\build\native\tmxlite_native.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\tmxlite_native.1.0.2\build\native\tmxlite_native.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\tmxlite_native.1.0.2\build\native\tmxlite_native.targets'))" />
   </Target>
 </Project>

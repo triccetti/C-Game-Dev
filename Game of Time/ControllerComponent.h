@@ -9,36 +9,41 @@ public:
 	//std::shared_ptr<TransformComponent> transform;
 	//std::shared_ptr<SpriteComponent> sprite;
 	TransformComponent * transform;
-	SpriteComponent * sprite;
+	SpriteComponent * skinSprite; 
+	SpriteComponent * eyesSprite;
+	 
 
-	ControllerComponent() {
+	ControllerComponent(SpriteComponent * skin, SpriteComponent * eye) {
+		skinSprite = skin;
+		eyesSprite = eye;
 	}
 
 	void init() override {
-		printf("Controller init\n");
-		transform = &entity->getComponent<TransformComponent>();
-		sprite = &entity->getComponent<SpriteComponent>();
+		transform = &entity->getComponent<TransformComponent>(); 
 	}
 
 	void update() override {
-		printf("Controller update\n");
 		if (Game::event.type == SDL_KEYDOWN) {
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
 				transform->velocity.y = -1;
-				sprite->playAnim("walk");
+				skinSprite->playAnim("back-walk");
+				eyesSprite->playAnim("none");
 				break;
 			case SDLK_a:
 				transform->velocity.x = -1;
-				sprite->playAnim("walk");
+				skinSprite->playAnim("left-walk");
+				eyesSprite->playAnim("left-blink");
 				break;
 			case SDLK_d:
 				transform->velocity.x = 1;
-				sprite->playAnim("walk");
+				skinSprite->playAnim("right-walk");
+				eyesSprite->playAnim("right-blink");
 				break;
 			case SDLK_s:
 				transform->velocity.y = 1;
-				sprite->playAnim("walk");
+				skinSprite->playAnim("front-walk");
+				eyesSprite->playAnim("front-blink");
 				break;
 			default:
 				break;
@@ -49,19 +54,23 @@ public:
 			switch (Game::event.key.keysym.sym) {
 			case SDLK_w:
 				transform->velocity.y = 0;
-				sprite->playAnim("idle");
+				skinSprite->playAnim("idle");
+				eyesSprite->playAnim("front-blink");
 				break;
 			case SDLK_a:
 				transform->velocity.x = 0;
-				sprite->playAnim("idle");
+				skinSprite->playAnim("idle");
+				eyesSprite->playAnim("front-blink");
 				break;
 			case SDLK_d:
 				transform->velocity.x = 0;
-				sprite->playAnim("idle");
+				skinSprite->playAnim("idle");
+				eyesSprite->playAnim("front-blink");
 				break;
 			case SDLK_s:
 				transform->velocity.y = 0;
-				sprite->playAnim("idle");
+				skinSprite->playAnim("idle");
+				eyesSprite->playAnim("front-blink");
 				break;
 			case SDLK_ESCAPE:
 				Game::running = false;

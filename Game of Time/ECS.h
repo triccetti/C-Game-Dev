@@ -1,18 +1,21 @@
 #pragma once
-#include <map>
-#include <string>
-#include <typeindex>
-#include <vector>
-#include <iostream>
-#include <typeinfo>
-#include <memory>
 #include <algorithm>
-#include <bitset>
 #include <array>
-#include <utility>
-#include <stack>
+#include <bitset>
 #include <deque>
 #include <functional>
+#include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <map>
+#include <memory>
+#include <stack>
+#include <sstream>
+#include <string>
+#include <typeindex>
+#include <typeinfo>
+#include <utility>
+#include <vector>
 #include "SDL.h"
 
 class Component;
@@ -22,6 +25,7 @@ class GameManager;
 
 using ComponentID = std::size_t;
 using SceneID = std::size_t;
+using Group = std::size_t;
 
 inline ComponentID getNewComponentTypeID() {
 	static ComponentID lastID = 0u;
@@ -47,7 +51,9 @@ template <typename T> inline SceneID getSceneTypeID() noexcept {
 
 constexpr std::size_t maxComponents = 32;
 constexpr std::size_t maxScenes = 32;
+constexpr std::size_t maxGroups = 32;
 
+using GroupBitset = std::bitset<maxGroups>;
 using ComponentBitSet = std::bitset<maxComponents>;
 using SceneBitSet = std::bitset<maxScenes>;
 using ComponentArray = std::array<Component*, maxComponents>;
@@ -61,17 +67,10 @@ public:
 	virtual void init() {}
 	virtual void update() {}
 	virtual void render() {}
-	//virtual void handleEvent(SDL_Event event) {}
-
-	void setOnClick(std::function<void()> func);
-	void setOnKeyPressed(std::function<void()> func);
 
 	bool isClickable() {
 		return clickable;
 	}
-
-	//std::function<void()> onClick;
-	//std::function<void()> onKeyPressed;
 
 	Entity * entity;
 
@@ -95,37 +94,14 @@ public:
 	}
 
 	/*
-		Handles events for all components of the entity.
-
-	void handleEvent(SDL_Event event) {
-		for (auto& c : components) {
-			if (c->isClickable()) {
-				c->handleEvent(event);
-			}
-		}
-	}*/
-
-	/*
 		Returns is the entity is active or not.
 	*/
 	bool isActive() { return active; }
 
 	/*
-		Returns if the entity is dead or not.
-	*/
-	bool isDead() { return dead; }
-
-	/*
-		Sets the entities active value to the given value.
-	*/
-	void setActive(bool act) {
-		active = act;
-	}
-
-	/*
 		Sets the entity to be destroyed.
 	*/
-	void destroy() { dead = true; }
+	void destroy() { active = false; }
 
 	/* Returns true or false if the entity has the component. */
 	template <typename T> bool hasComponent() const {
@@ -157,24 +133,38 @@ public:
 		return *static_cast<T*>(ptr);
 	}
 
-	template<typename T> void setSceneID() {
-		scene = getSceneTypeID<T>();
+	void setSceneID(SceneID sceneID) {
+		scene = sceneID;
 	}
 
 	SceneID getSceneID() {
 		return scene;
 	}
 
+	bool hasGroup(Group mGroup) {
+		return groupBitset[mGroup];
+	}
+
+	void addGroup(Group mGroup);
+	void delGroup(Group mGroup) {
+		groupBitset[mGroup] = false;
+	}
+
+	void setPlayer(bool p) { player = p; }
+
+	bool isPlayer() { return player; }
+
 private:
 	GameManager& manager;
 	bool active = true;
-	bool dead = false;
+	bool player = false;
 
 	std::vector<std::unique_ptr<Component>> components;
 
 	// The scene the entity belongs too.
 	SceneID scene;
 
+	GroupBitset groupBitset;
 	ComponentArray componentArray;
 	ComponentBitSet componentBitset;
 };
@@ -187,33 +177,36 @@ public:
 	virtual void init() {}
 	virtual void update() {}
 	virtual void render() {}
-	//virtual void handleEvent(SDL_Event event) {}
 
 	//virtual void load() {}
-	//virtual void unload() {}
+	virtual void unload() {}
 	virtual ~Scene() {}
 	// virtual void  transitionIn();
 	// virtual void  transitionOut();
 
+	bool isInit() { return initialized; }
+
+	virtual void addTile(int srcX, int srcY, int xpos, int ypos, int tileSize, int tilesetGid, int tileGid) {}
+
 	GameManager * manager;
+	bool initialized = false;
+
 private:
-	//Map * map;
 };
 
 class GameManager {
 public:
 
-	// Updates the current scene.
 	void update();
 	void render();
-	//void handleEvents(SDL_Event event);
 
 	/*
 	Creates an entity and returns a pointer to it.
 	*/
 	template <typename T> Entity& createEntity() {
 		Entity *e = new Entity(*this);
-		e->setSceneID<T>();
+
+		e->setSceneID(getSceneTypeID<T>());
 		std::unique_ptr<Entity> uPtr{ e };
 		entities.emplace_back(std::move(uPtr));
 		return *e;
@@ -221,30 +214,85 @@ public:
 
 	/* Updates all entities in the given scene T. */
 	template <typename T> void updateEntities() {
-		for (auto& e : entities) {
-			if (e->getSceneID() == getSceneTypeID<T>()) {
-				e->update();
+		auto& tiles(getGroup(Game::groupMap));
+		auto& players(getGroup(Game::groupPlayers));
+		auto& colliders(getGroup(Game::groupColliders));
+		auto& projectiles(getGroup(Game::groupProjectiles));
+		auto& ui(getGroup(Game::groupUI));
+
+		SceneID currId = getSceneTypeID<T>();
+		for (auto& t : tiles) {
+			if (t->getSceneID() == currId) {
+				t->update();
+			}
+		}
+
+		for (auto& c : colliders) {
+			if (c->getSceneID() == currId) {
+				c->update();
+			}
+		}
+
+		for (auto& p : players) {
+			if (p->getSceneID() == currId) {
+				p->update();
+			}
+		}
+
+		for (auto& p : projectiles) {
+			if (p->getSceneID() == currId) {
+				p->update();
+			}
+		}
+
+		for (auto& u : ui) {
+			if (u->getSceneID() == currId) {
+				u->update();
 			}
 		}
 	}
 
-	/* Updates all entities in the given scene T. */
+	/* Renders all entities in the given scene T. */
 	template <typename T> void renderEntities() {
-		for (auto& e : entities) {
-			if (e->getSceneID() == getSceneTypeID<T>()) {
-				e->render();
+		auto& tiles(getGroup(Game::groupMap));
+		auto& players(getGroup(Game::groupPlayers));
+		auto& colliders(getGroup(Game::groupColliders));
+		auto& projectiles(getGroup(Game::groupProjectiles));
+		auto& ui(getGroup(Game::groupUI));
+
+		for (auto& t : tiles) {
+			if (t->getSceneID() == getSceneTypeID<T>()) {
+				t->render();
+			}
+		}
+
+		for (auto& p : players) {
+			if (p->getSceneID() == getSceneTypeID<T>()) {
+				p->render();
+			}
+		}
+
+		for (auto& p : projectiles) {
+			if (p->getSceneID() == getSceneTypeID<T>()) {
+				p->render();
+			}
+		}
+
+		for (auto& u : ui) {
+			if (u->getSceneID() == getSceneTypeID<T>()) {
+				u->render();
 			}
 		}
 	}
 
-	/* Handles events for any entities in the given scene T.
-	template <typename T> void handleEntities(SDL_Event event) {
+	/* Destroys all entities in the given scene T. */
+	template <typename T> void destroyEntities() {
 		for (auto& e : entities) {
 			if (e->getSceneID() == getSceneTypeID<T>()) {
-				e->handleEvent(event);
+				e->destroy();
 			}
 		}
-	}*/
+	}
 
 	void refresh() {
 		entities.erase(std::remove_if(std::begin(entities), std::end(entities),
@@ -273,7 +321,6 @@ public:
 		sceneArray[getSceneTypeID<T>()] = s;
 		sceneBitset[getSceneTypeID<T>()] = true;
 
-		s->init();
 		return *s;
 	}
 
@@ -289,24 +336,48 @@ public:
 		Updates the current scene to a scene of type T.
 	*/
 	template<typename T> void changeScene() {
+		if (currentSceneID < maxScenes) {
+			auto& currentScene(sceneArray[currentSceneID]);
+			currentScene->unload();
+		}
+
 		currentSceneID = getSceneTypeID<T>();
+
+		auto& newScene(sceneArray[currentSceneID]);
+
 		sceneStack.push(currentSceneID);
 	}
 
+	/*
+		Returns true or false if the current scene is equal to the type of scene passed in.
+	*/
+	template<typename T> bool isCurrentScene() {
+		return getSceneTypeID<T>() == currentSceneID;
+	}
+
 	void prevScene() {
-		printf("%d", sceneStack.empty());
 		if (!sceneStack.empty()) {
 			currentSceneID = sceneStack.top();
 			sceneStack.pop();
 		}
 	}
 
+	void AddToGroup(Entity* mEntity, Group mGroup) {
+		groupedEntities[mGroup].emplace_back(mEntity);
+	}
+
+	std::vector<Entity*>& getGroup(Group mGroup) {
+		return groupedEntities[mGroup];
+	}
+
 private:
 	std::vector<std::unique_ptr<Scene>> scenes;
 	std::vector<std::unique_ptr<Entity>> entities;
+	std::array<std::vector<Entity*>, maxGroups> groupedEntities;
+
 	std::stack<SceneID> sceneStack;
 
 	SceneArray sceneArray;
 	SceneBitSet sceneBitset;
-	SceneID currentSceneID;
+	SceneID currentSceneID = maxScenes;
 };

@@ -1,15 +1,10 @@
 #include "Game.h"
 
 #include "TextureManager.h"
-#include "Map.h"
 #include "ECS.h"
 #include "AssetManager.h"
 #include "Scenes.h"
-
-int windowHeight;
-int windowWidth;
-int mapHeight;
-int mapWidth;
+#include "Components.h"
 
 GameManager manager;
 
@@ -22,8 +17,10 @@ bool Game::running = false;
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
 SDL_Rect Game::clickPos;
 
-Game::Game() {}
+int Game::windowHeight = 0;
+int Game::windowWidth = 0;
 
+Game::Game() {}
 Game::~Game() {}
 
 void Game::init(const char* title, int width, int height, bool fullscreen) {
@@ -68,12 +65,12 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 	assets->AddTexture("terrain", "Assets/map_ts.png");
 	assets->AddTexture("player", "Assets/character.png");
 
-	for (int i = 1; i < 6; i++) {
+	for (int i = 1; i <= 10; i++) {
 		std::string skinTexPath = "Assets/skin" + std::to_string(i) + ".png";
 		assets->AddTexture("skin" + std::to_string(i), skinTexPath.c_str());
 	}
 
-	for (int i = 1; i < 6; i++) {
+	for (int i = 1; i <= 5; i++) {
 		std::string skinTexPath = "Assets/eyes" + std::to_string(i) + ".png";
 		assets->AddTexture("eyes" + std::to_string(i), skinTexPath.c_str());
 	}
@@ -85,6 +82,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 	manager.addScene<MainMenuScene>();
 	manager.addScene<GameSelectScene>();
 	manager.addScene<CharacterCreateScene>();
+	//	manager.addScene<PresentFarmScene>();
 	printf("	Scenes loaded.\n");
 
 	// Sets the start scene
@@ -94,7 +92,11 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 }
 
 void Game::handleEvents() {
-	SDL_WaitEvent(&event);
+	if (manager.isCurrentScene<CharacterCreateScene>()) {
+		SDL_WaitEvent(&event);
+	} else {
+		SDL_PollEvent(&event);
+	}
 	switch (event.type) {
 	case SDL_QUIT:
 		running = false;
@@ -112,10 +114,10 @@ void Game::update() {
 		camera.x = 0;
 	if (camera.y < 0)
 		camera.y = 0;
-	if (camera.x > camera.w / 2)
-		camera.x = camera.w / 2;
-	if (camera.y > camera.h / 2)
-		camera.y = camera.h / 2;
+	if (camera.x > camera.w)
+		camera.x = camera.w;
+	if (camera.y > camera.h)
+		camera.y = camera.h;
 }
 
 void Game::render() {

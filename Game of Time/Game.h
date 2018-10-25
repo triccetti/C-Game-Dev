@@ -26,16 +26,23 @@ public:
 	bool isRunning() { return running; }
 
 	static SDL_Renderer * renderer;
-
 	static AssetManager * assets;
 
 	static SDL_Event event;
 	static SDL_Rect clickPos;
 	static bool running;
 	static SDL_Rect camera;
+	static int windowHeight;
+	static int windowWidth;
+
+	enum groupLabels : std::size_t {
+		groupMap,
+		groupPlayers,
+		groupColliders,
+		groupProjectiles,
+		groupUI
+	};
 
 private:
-	int windowHeight;
-	int windowWidth;
 	SDL_Window *window;
 };

@@ -24,6 +24,9 @@ private:
 	SDL_Texture * hoverTexture;
 
 public:
+	SDL_Color WHITE = { 255,255,255,255 };
+	SDL_Color GRAY = { 115,115,115,255 };
+
 	std::function<void()> onClick;
 
 	UIButton() {};
@@ -63,16 +66,12 @@ public:
 			isHover = true;
 			printf("clicked!\n");
 			onClick();
-		}
-		else if (Utils::isMouseOver(&position)) {
+		} else if (Utils::isMouseOver(&position)) {
 			isHover = true;
-			SDL_Color white = { 115, 115, 115, 255 };
-			label->setTextColor(white);
-		}
-		else {
+			label->setTextColor(GRAY);
+		} else {
 			isHover = false;
-			SDL_Color white = { 255,255,255, 255 };
-			label->setTextColor(white);
+			label->setTextColor(WHITE);
 		}
 	}
 
@@ -80,8 +79,7 @@ public:
 		if (!isTextButton) {
 			if (isHover) {
 				TextureManager::RenderTexture(hoverTexture, srcRect, destRect, SDL_FLIP_NONE);
-			}
-			else {
+			} else {
 				TextureManager::RenderTexture(buttonTexture, srcRect, destRect, SDL_FLIP_NONE);
 			}
 		}

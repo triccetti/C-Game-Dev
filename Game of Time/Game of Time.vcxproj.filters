@@ -25,10 +25,19 @@
     <Filter Include="Header Files\Components\UI Components">
       <UniqueIdentifier>{c4faccda-b6f0-4d93-b0d6-bca07984df16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scenes\World">
+      <UniqueIdentifier>{e8c453ee-6d1f-434b-8afd-b532dd0f0284}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Assets\map.mmap">
+      <Filter>Resource Files\Assets</Filter>
+    </None>
+    <None Include="TMXLoader\RapidXML\manual.html">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="Assets\map.tmx">
       <Filter>Resource Files\Assets</Filter>
     </None>
   </ItemGroup>
@@ -122,6 +131,12 @@
     <ClInclude Include="UISelector.h">
       <Filter>Header Files\Components\UI Components</Filter>
     </ClInclude>
+    <ClInclude Include="PresentFarmScene.h">
+      <Filter>Header Files\Scenes\World</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\map.png">
@@ -131,9 +146,6 @@
       <Filter>Resource Files\Assets</Filter>
     </Image>
     <Image Include="Assets\regularEyes.png">
-      <Filter>Resource Files\Assets</Filter>
-    </Image>
-    <Image Include="Assets\character.png">
       <Filter>Resource Files\Assets</Filter>
     </Image>
     <Image Include="Assets\droopyEyes.png">
@@ -173,6 +185,9 @@
       <Filter>Resource Files\Assets</Filter>
     </Image>
     <Image Include="Assets\eyes5.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="Assets\terrain.png">
       <Filter>Resource Files\Assets</Filter>
     </Image>
   </ItemGroup>

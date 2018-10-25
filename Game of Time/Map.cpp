@@ -1,5 +1,5 @@
 #include "Map.h"
-#include "ECS.h" 
+#include "ECS.h"
 #include "Components.h"
 
 Map::Map(GameManager* man, std::string texId, int mScale) : manager(man) {
@@ -9,6 +9,7 @@ Map::Map(GameManager* man, std::string texId, int mScale) : manager(man) {
 
 Map::~Map() {}
 
+/*
 void Map::LoadMap(std::string path) {
 	char c;
 	std::ifstream mapFile;
@@ -46,6 +47,6 @@ void Map::LoadMap(std::string path) {
 }
 
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos) {
-	//Entity * tile = &manager->createEntity();
-	//tile->addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, scaledSize, textureId);
-}
+	Entity * tile = &manager->createEntity();
+	tile->addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, scaledSize, textureId);
+}*/

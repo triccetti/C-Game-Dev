@@ -3,8 +3,10 @@
 #include "ECS.h"
 #include "Vector2D.h"
 #include "Game.h"
+#include "Utils.h"
+#include "CollisionComponent.h"
 #include "TextureManager.h"
- 
+
 class TileComponent : public Component {
 public:
 	SDL_Texture * texture;
@@ -28,14 +30,22 @@ public:
 		destRect.w = destRect.h = scale;
 	}
 
+	TileComponent(int srcX, int srcY, int xpos, int ypos, int tileSize, int scale, int gid) {
+		texture = Game::assets->GetTileset(gid);
+		srcRect.x = srcX;
+		srcRect.y = srcY;
+		srcRect.w = srcRect.h = tileSize;
+		position.x = static_cast<float>(xpos * scale);
+		position.y = static_cast<float>(ypos * scale);
+		destRect.w = destRect.h = tileSize * scale;
+	}
+
 	void update() override {
-		printf("Tile update\n");
 		destRect.x = static_cast<int>(position.x - Game::camera.x);
 		destRect.y = static_cast<int>(position.y - Game::camera.y);
 	}
 
-	void render() override {
-		printf("Tile render\n");
+	void render() override { 
 		TextureManager::RenderTexture(texture, srcRect, destRect, SDL_FLIP_NONE);
 	}
 };

@@ -13,19 +13,26 @@
 
 class SpriteComponent : public Component {
 private:
-	//std::shared_ptr<TransformComponent> transform;
 	TransformComponent * transform;
 
 	SDL_Texture * texture;
 	SDL_Rect srcRect, destRect;
+	int index;
 
 	bool animated = false;
-	int frames = 1;
-	int speed = 100;
-	int index = -1;
+	int textureHeight;
+	int textureWidth;
+	int totalFrames = -1;
+
+	int speed = 120;
+	int frames = 0;
+	int delay = 0;
+	int lastTick = 0;
+
+	std::string currAnimName = "";
 
 public:
-	int animIndex = 0;
+	int animationIndex = 0;
 	std::map<std::string, Animation> animations;
 	std::vector<std::string> anims;
 
@@ -39,11 +46,10 @@ public:
 	SpriteComponent(std::string id, bool isAnimated) {
 		animated = isAnimated;
 		setTex(id);
-		Animation idle = Animation(0, 1, speed);
+		Animation idle = Animation(0, 1, speed, 0);
 		animations.emplace("idle", idle);
 		anims = { "idle" };
 		index = 0;
-		std::cout << "current anim " << index << std::endl;
 		playAnim("idle");
 	}
 
@@ -51,6 +57,8 @@ public:
 
 	void setTex(std::string id) {
 		texture = Game::assets->GetTexture(id);
+
+		SDL_QueryTexture(texture, NULL, NULL, &textureWidth, &textureHeight);
 	}
 
 	void init() override {
@@ -63,10 +71,31 @@ public:
 
 	void update() override {
 		if (animated) {
-			srcRect.x = srcRect.w * static_cast<int>((SDL_GetTicks() / speed) % frames);
+			totalFrames = (textureWidth / transform->width);
+			int currTick = static_cast<int>(SDL_GetTicks());
+			if (delay > 0) {
+				if (lastTick == 0) {
+					lastTick = currTick;
+					if (currAnimName == "front-blink") {
+						printf("last tick %d\n", currTick);
+					}
+				} else if (currTick < lastTick + delay) {
+					currTick = lastTick;
+					if (currAnimName == "front-blink") {
+						printf("current tick: u%d\n", currTick);
+					}
+				} 
+			} else {
+				currTick = static_cast<int>(SDL_GetTicks());
+			}
+
+			int col = (static_cast<int>((currTick / speed) % frames) + animationIndex) % totalFrames;
+
+			srcRect.x = col * transform->width;
 		}
 
-		srcRect.y = animIndex * transform->height;
+		int row = animationIndex / totalFrames;
+		srcRect.y = row * transform->height;
 
 		destRect.x = static_cast<int>(transform->position.x - Game::camera.x);
 		destRect.y = static_cast<int>(transform->position.y - Game::camera.y);
@@ -75,16 +104,24 @@ public:
 	}
 
 	void render() override {
-		TextureManager::RenderTexture(texture, srcRect, destRect, spriteFlip);
+		if (texture)
+			TextureManager::RenderTexture(texture, srcRect, destRect, spriteFlip);
 	}
 
 	void playAnim(std::string animName) {
-		frames = animations[animName].frames;
-		animIndex = animations[animName].index;
-		speed = animations[animName].speed;
+		std::map<std::string, Animation>::iterator it = animations.find(animName);
+		Animation anim;
+		if (it != animations.end() && animName != currAnimName) {
+			currAnimName = animName;
+			animated = true;
+			frames = animations[animName].frames;
+			animationIndex = animations[animName].index;
+			speed = animations[animName].speed;
+			delay = animations[animName].delay;
 
-		auto it = std::find(anims.begin(), anims.end(), animName);
-		index = it - anims.begin();
+			auto it = std::find(anims.begin(), anims.end(), animName);
+			index = it - anims.begin();
+		}
 	}
 
 	void addAnimation(std::string animName, Animation anim) {
@@ -103,11 +140,8 @@ public:
 			index = 0;
 		}
 		playAnim(anims[index]);
-		std::cout << index << std::endl;
 		std::cout << "frames: " << animations[anims[index]].frames
 			<< "\nindex: " << animations[anims[index]].index
 			<< "\nspeed: " << animations[anims[index]].speed << std::endl;
-
-		std::cout << srcRect.x << " " << srcRect.y << " " << srcRect.h << " " << srcRect.w << std::endl;
 	}
 };

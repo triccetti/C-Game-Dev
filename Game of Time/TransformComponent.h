@@ -16,22 +16,28 @@ public:
 	bool blocked = false;
 
 	TransformComponent() {
-		printf("First constructor\n");
+		position.Zero();
 	}
 
 	TransformComponent(int sc) {
-		printf("Second constructor\n");
+		position.Zero();
 		scale = sc;
 	}
 
 	TransformComponent(float x, float y) {
-		printf("Third constructor\n");
 		position.x = x;
 		position.y = y;
+	} 
+
+	TransformComponent(float x, float y, int size, int sc) {
+		position.x = x;
+		position.y = y;
+		height = size;
+		width = size;
+		scale = sc;
 	}
 
 	TransformComponent(float x, float y, int h, int w, int sc) {
-		printf("Fourth constructor\n");
 		position.x = x;
 		position.y = y;
 		height = h;
@@ -40,11 +46,11 @@ public:
 	}
 
 	void init() override {
-		velocity.Zero(); 
+		velocity.Zero();
 	}
 
 	void update() override {
-		position.x += static_cast<float>(velocity.x * speed);
-		position.y += static_cast<float>(velocity.y * speed);
+		position.x += static_cast<int>(velocity.x * speed);
+		position.y += static_cast<int>(velocity.y * speed);
 	}
 };

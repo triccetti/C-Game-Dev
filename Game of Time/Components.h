@@ -6,6 +6,7 @@
 #include "TileComponent.h"
 #include "ControllerComponent.h"
 #include "TransformComponent.h"
+#include "CollisionComponent.h" 
 
 // UI Components
 #include "UILabel.h"

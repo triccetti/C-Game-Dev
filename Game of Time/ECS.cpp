@@ -1,35 +1,29 @@
 #include "ECS.h"
 
-void Component::setOnClick(std::function<void()> func) {
-	clickable = true;
-//	onClick = func;
-}
-
-void Component::setOnKeyPressed(std::function<void()> func) {
-	//onKeyPressed = func;
+void Entity::addGroup(Group mGroup) {
+	groupBitset[mGroup] = true;
+	manager.AddToGroup(this, mGroup);
 }
 
 /*
 	Updates the current scene.
 */
 void GameManager::update() {
-	auto& currentScene(sceneArray[currentSceneID]);
-	currentScene->update();
+	if (currentSceneID < maxScenes) {
+		auto& currentScene(sceneArray[currentSceneID]);
+		if (!currentScene->isInit()) {
+			currentScene->init();
+		}
+		currentScene->update();
+	}
 }
 
 /*
 	Renders the current scene.
 */
 void GameManager::render() {
-	auto& currentScene(sceneArray[currentSceneID]);
-	currentScene->render();
+	if (currentSceneID < maxScenes) {
+		auto& currentScene(sceneArray[currentSceneID]);
+		currentScene->render();
+	}
 }
-
-/*
-Handles mouse for scene.
-*/
-/*
-void GameManager::handleEvents(SDL_Event event) {
-	auto& currentScene(sceneArray[currentSceneID]);
-	currentScene->handleEvent(event);
-}*/

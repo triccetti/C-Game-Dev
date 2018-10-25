@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "Components.h"
 
 bool Utils::isMouseOver(SDL_Rect * rect) {
 	int x, y;
@@ -8,6 +9,41 @@ bool Utils::isMouseOver(SDL_Rect * rect) {
 		&& y <= rect->y + rect->h && y >= rect->y);
 }
 
+bool Utils::collision(const SDL_Rect& recA, const SDL_Rect& recB) {
+	if (
+		recA.x + recA.w >= recB.x &&
+		recB.x + recB.w >= recA.x &&
+		recA.y + recA.h >= recB.y &&
+		recB.y + recB.h >= recA.y
+		) {
+		return true;
+	}
+
+	return false;
+}
+
+bool Utils::collision(const CollisionComponent& colA, const CollisionComponent& colB) {
+	return collision(colA.collider, colB.collider);
+}
+
+void Utils::saveTexturePng(SDL_Renderer* renderer, SDL_Texture* texture, const char* file_name) {
+	SDL_Texture* target = SDL_GetRenderTarget(renderer);
+	SDL_SetRenderTarget(renderer, texture);
+	int width, height;
+	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+	SDL_Surface* surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+	SDL_Surface* pngSurf = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA8888, 0);
+	SDL_FreeSurface(surface);
+	SDL_RenderReadPixels(renderer, NULL, pngSurf->format->format, pngSurf->pixels, pngSurf->pitch);
+	IMG_SavePNG(pngSurf, file_name);
+	SDL_FreeSurface(pngSurf);
+	SDL_SetRenderTarget(renderer, target);
+}
+
+/*
+	Saves given SDL_Texture to the given file.
+	REF: https://stackoverflow.com/questions/34255820/save-sdl-texture-to-file
+*/
 void Utils::save_texture(SDL_Renderer *ren, SDL_Texture *tex, const char *filename) {
 	SDL_Texture *ren_tex;
 	SDL_Surface *surf;
