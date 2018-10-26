@@ -79,6 +79,7 @@ public:
 			if (elapsedTime < currTime - delay) {
 				elapsedTime = currTime + delay;
 			}
+
 			int col = (static_cast<int>((elapsedTime / speed) % frames) + animationIndex) % totalFrames;
 
 			srcRect.x = col * transform->width;
