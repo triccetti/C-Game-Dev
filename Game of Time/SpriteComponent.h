@@ -73,14 +73,8 @@ public:
 		if (animated) {
 			totalFrames = (textureWidth / transform->width);
 			int currTime = static_cast<int>(SDL_GetTicks());
-			if (elapsedTime == 0) {
-				elapsedTime = currTime;
-			}
-			if (elapsedTime < currTime - delay) {
-				elapsedTime = currTime + delay;
-			}
 
-			int col = (static_cast<int>((elapsedTime / speed) % frames) + animationIndex) % totalFrames;
+			int col = (static_cast<int>((currTime / speed) % frames) + animationIndex) % totalFrames;
 
 			srcRect.x = col * transform->width;
 		}
