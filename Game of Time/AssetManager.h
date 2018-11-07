@@ -21,7 +21,7 @@ public:
 	void AddTerrain(int gid, std::string name);
 	void AddFont(std::string id, std::string path, int fontSize);
 
-	void LoadTileMap(std::string path, Scene* parent);
+	void LoadTileMap(std::string path, Scene* parent, SDL_Rect &mapSize);
 
 	SDL_Texture* GetTexture(std::string id);
 	std::string GetTerrain(int gid);

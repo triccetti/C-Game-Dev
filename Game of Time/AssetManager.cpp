@@ -95,13 +95,13 @@ TTF_Font* AssetManager::GetFont(std::string id) {
 /*
 Returns the terrain type of the given id. Can return an empty terrain type.
 */
-std::string AssetManager::GetTerrain(int gid) { 
+std::string AssetManager::GetTerrain(int gid) {
 	return terrains[gid];
 }
 
 // REF: https://github.com/connorkuehl/sdl2-tiled-example/blob/master/src/level.cpp
 // REF: https://bitbucket.org/martingrant/tmxloader
-void AssetManager::LoadTileMap(std::string path, Scene* parent) {
+void AssetManager::LoadTileMap(std::string path, Scene* parent, SDL_Rect &mapSize) {
 	tmx::Map map;
 
 	if (map.load(path)) {
@@ -116,6 +116,9 @@ void AssetManager::LoadTileMap(std::string path, Scene* parent) {
 		int tileHeight = tileDimensions.y;
 		int tileWidth = tileDimensions.x;
 		printf("tile h: %d w: %d\n", tileHeight, tileWidth);
+
+		mapSize.h = tileHeight * mapHeight;
+		mapSize.w = tileWidth * mapWidth;
 
 		// Add maps tilesets to textures
 		auto& mapTilesets = map.getTilesets();

@@ -27,10 +27,9 @@ public:
 
 	void init() override {
 		initialized = true;
-
 		//initMap("terrain", "Assets\\map.mmap", 4);
-		Game::assets->LoadTileMap("Assets\\map.tmx", this);
-
+		Game::assets->LoadTileMap("Assets\\map.tmx", this, Game::viewPort);
+		 
 		player = &manager->createEntity<PresentFarmScene>();
 		player->addComponent<TransformComponent>(50.0f, 50.0f, 32, 16, 4);
 

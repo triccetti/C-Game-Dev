@@ -16,6 +16,7 @@ bool Game::running = false;
 
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
 SDL_Rect Game::clickPos;
+SDL_Rect Game::viewPort = { 0, 0, 800, 640 };
 
 int Game::windowHeight = 0;
 int Game::windowWidth = 0;
@@ -118,6 +119,12 @@ void Game::update() {
 		camera.x = camera.w;
 	if (camera.y > camera.h)
 		camera.y = camera.h;
+	if (camera.y + viewPort.h > camera.h) 
+		camera.y = camera.h;
+	if (camera.x + viewPort.w > camera.w) 
+		camera.x = camera.w;
+
+	printf("camera: %d, %d view: %d, %d \n", Game::camera.x, Game::camera.y, Game::viewPort.h, Game::viewPort.w);
 }
 
 void Game::render() {

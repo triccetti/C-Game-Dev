@@ -32,6 +32,7 @@ public:
 	static SDL_Rect clickPos;
 	static bool running;
 	static SDL_Rect camera;
+	static SDL_Rect viewPort;
 	static int windowHeight;
 	static int windowWidth;
 
