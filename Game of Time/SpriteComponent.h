@@ -73,9 +73,8 @@ public:
 		if (animated) {
 			totalFrames = (textureWidth / transform->width);
 			int currTime = static_cast<int>(SDL_GetTicks());
-			// TODO fix animations with delays
+			// TODO figure out how to see if animation is over
 			int col = (static_cast<int>((currTime / speed) % frames) + animationIndex) % totalFrames;
-
 			srcRect.x = col * transform->width;
 		}
 

@@ -29,22 +29,23 @@ public:
 		initialized = true;
 		//initMap("terrain", "Assets\\map.mmap", 4);
 		Game::assets->LoadTileMap("Assets\\map.tmx", this, Game::viewPort);
-		 
+
 		player = &manager->createEntity<PresentFarmScene>();
 		player->addComponent<TransformComponent>(50.0f, 50.0f, 32, 16, 4);
 
 		SpriteComponent * skin = &player->addComponent<SpriteComponent>(playerID, true);
 		SpriteComponent * eye = &player->addComponent<SpriteComponent>(eyesID, true);
 
+		eye->addAnimation("idle", Animation(0, 1, 500, 500));
 		eye->addAnimation("front-blink", Animation(0, 4, 120, 500));
 		eye->addAnimation("right-blink", Animation(4, 4, 120, 500));
 		eye->addAnimation("none", Animation(8, 4, 120, 500));
 		eye->addAnimation("left-blink", Animation(12, 4, 120, 500));
 
-		skin->addAnimation("front-walk", Animation(0, 4, 120, 0));
-		skin->addAnimation("right-walk", Animation(4, 4, 120, 0));
-		skin->addAnimation("back-walk", Animation(8, 4, 120, 0));
-		skin->addAnimation("left-walk", Animation(12, 4, 120, 0));
+		skin->addAnimation("front-walk", Animation(0, 4, 200, 0));
+		skin->addAnimation("right-walk", Animation(4, 4, 200, 0));
+		skin->addAnimation("back-walk", Animation(8, 4, 200, 0));
+		skin->addAnimation("left-walk", Animation(12, 4, 200, 0));
 
 		player->addComponent<ControllerComponent>(skin, eye);
 		player->addComponent<CollisionComponent>("player");

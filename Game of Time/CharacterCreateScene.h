@@ -26,18 +26,24 @@ public:
 		name->addComponent<UILabel>(100, 100, "Name", "vt323", WHITE);
 		name->addComponent<TextBoxComponent>(150, 100, 16, "vt323", WHITE, RED);
 
+		// TODO: 10 is a magic number add it to properties
 		playerSkin = &manager->createEntity<CharacterCreateScene>();
 		playerSkin->addComponent<TransformComponent>(350.0f, 125.0f, 32, 16, 10);
 		playerSkin->addComponent<SpriteComponent>("skin1");
-		playerSkin->addComponent<UILabel>(175, 225, "Skin Color", "vt323", WHITE);
-		// TODO: 10 is a magic number add it to properties
-		playerSkin->addComponent<UISelector>("skin", "vt323", 10, 450, 225, 300, 225);
+		playerSkin->addComponent<UILabel>(200, 175, "Skin Color", "vt323", WHITE);
+		playerSkin->addComponent<UISelector>("skin", "vt323", 10, 500, 175, 325, 175);
 
 		playerEyes = &manager->createEntity<CharacterCreateScene>();
 		playerEyes->addComponent<TransformComponent>(350.0f, 125.0f, 32, 16, 10);
 		playerEyes->addComponent<SpriteComponent>("eyes1");
-		playerEyes->addComponent<UILabel>(175, 175, "Eyes", "vt323", WHITE);
-		playerEyes->addComponent<UISelector>("eyes", "vt323", 5, 450, 175, 300, 175);
+		playerEyes->addComponent<UILabel>(200, 245, "Eyes", "vt323", WHITE);
+		playerEyes->addComponent<UISelector>("eyes", "vt323", 5, 500, 245, 325, 245);
+
+		playerHair = &manager->createEntity<CharacterCreateScene>();
+		playerHair->addComponent<TransformComponent>(350.0f, 125.0f, 32, 16, 10);
+		playerHair->addComponent<SpriteComponent>("hair1");
+		playerHair->addComponent<UILabel>(200, 200, "Hair", "vt323", WHITE);
+		playerHair->addComponent<UISelector>("hair", "vt323", 3, 500, 200, 325, 200);
 
 		create = &manager->createEntity<CharacterCreateScene>();
 		create->addComponent<UILabel>(600, 550, "CREATE", "vt323", WHITE);
@@ -58,6 +64,7 @@ public:
 		name->addGroup(Game::groupUI);
 		playerSkin->addGroup(Game::groupUI);
 		playerEyes->addGroup(Game::groupUI);
+		playerHair->addGroup(Game::groupUI);
 		create->addGroup(Game::groupUI);
 	}
 
@@ -80,6 +87,7 @@ private:
 
 	Entity* playerSkin;
 	Entity* playerEyes;
+	Entity* playerHair;
 
 	Entity* accessories;
 	Entity* top;
@@ -104,8 +112,8 @@ private:
 		SDL_SetRenderTarget(Game::renderer, target_texture);
 		SDL_RenderCopy(Game::renderer, Game::assets->GetTexture("skin" + std::to_string(skinIndex)), NULL, NULL);
 
-		//int eyeIndex = playerEyes->getComponent<UISelector>().getSelectedIndex();
-		//SDL_RenderCopy(Game::renderer, Game::assets->GetTexture("eyes" + std::to_string(eyeIndex)), NULL, NULL);
+		int hairIndex = playerHair->getComponent<UISelector>().getSelectedIndex();
+		SDL_RenderCopy(Game::renderer, Game::assets->GetTexture("hair" + std::to_string(hairIndex)), NULL, NULL);
 
 		SDL_SetRenderTarget(Game::renderer, NULL);
 
