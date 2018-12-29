@@ -28,28 +28,35 @@ public:
 	void init() override {
 		initialized = true;
 		//initMap("terrain", "Assets\\map.mmap", 4);
-		Game::assets->LoadTileMap("Assets\\map.tmx", this, Game::viewPort);
+		Game::assets->LoadTileMap("Assets\\map.tmx", this, &Game::viewPort);
 
 		player = &manager->createEntity<PresentFarmScene>();
 		player->addComponent<TransformComponent>(50.0f, 50.0f, 32, 16, 4);
 
-		SpriteComponent * skin = &player->addComponent<SpriteComponent>(playerID, true);
-		SpriteComponent * eye = &player->addComponent<SpriteComponent>(eyesID, true);
+		SpriteComponent * skin = &player->addComponent<SpriteComponent>(playerID);
+		SpriteComponent * eye = &player->addComponent<SpriteComponent>(eyesID);
 
-		eye->addAnimation("idle", Animation(0, 1, 500, 500));
-		eye->addAnimation("front-blink", Animation(0, 4, 120, 500));
-		eye->addAnimation("right-blink", Animation(4, 4, 120, 500));
-		eye->addAnimation("none", Animation(8, 4, 120, 500));
-		eye->addAnimation("left-blink", Animation(12, 4, 120, 500));
+		eye->addAnimation("idle", Animation(0, 1, 500, false, "front-blink"));
+		eye->addAnimation("front-blink", Animation(0, 4, 300, false, "idle"));
+		eye->addAnimation("right-blink", Animation(4, 4, 250));
+		eye->addAnimation("none", Animation(8, 4, 250));
+		eye->addAnimation("left-blink", Animation(12, 4, 250));
 
-		skin->addAnimation("front-walk", Animation(0, 4, 200, 0));
-		skin->addAnimation("right-walk", Animation(4, 4, 200, 0));
-		skin->addAnimation("back-walk", Animation(8, 4, 200, 0));
-		skin->addAnimation("left-walk", Animation(12, 4, 200, 0));
+		skin->addAnimation("front-walk", Animation(0, 4, 200));
+		skin->addAnimation("right-walk", Animation(4, 4, 200));
+		skin->addAnimation("back-walk", Animation(8, 4, 200));
+		skin->addAnimation("left-walk", Animation(12, 4, 200));
+		skin->addAnimation("front-idle", Animation(0, 1, 200));
+		skin->addAnimation("right-idle", Animation(4, 1, 200));
+		skin->addAnimation("back-idle", Animation(8, 1, 200));
+		skin->addAnimation("left-idle", Animation(12, 1, 200));
+
+		eye->playAnim("idle");
+		skin->playAnim("front-idle");
 
 		player->addComponent<ControllerComponent>(skin, eye);
 		player->addComponent<CollisionComponent>("player");
-		cc = &player->addComponent<CollisionComponent>("player-feet", 0, 16, 16);
+		cc = &player->addComponent<CollisionComponent>("player-feet");
 
 		player->addGroup(Game::groupPlayers);
 	}

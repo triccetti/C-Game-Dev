@@ -26,7 +26,7 @@ private:
 
 	int speed = 120;
 	int frames = 0;
-	int delay = 0;
+	bool repeat = true;
 	int elapsedTime = 0;
 
 	std::string currAnimName = "";
@@ -41,16 +41,6 @@ public:
 	SpriteComponent(std::string id) {
 		setTex(id);
 		animated = false;
-	}
-
-	SpriteComponent(std::string id, bool isAnimated) {
-		animated = isAnimated;
-		setTex(id);
-		Animation idle = Animation(0, 1, speed, 0);
-		animations.emplace("idle", idle);
-		anims = { "idle" };
-		index = 0;
-		playAnim("idle");
 	}
 
 	~SpriteComponent() {}
@@ -70,15 +60,34 @@ public:
 	}
 
 	void update() override {
+		int col = 0;
+		int row = 0;
 		if (animated) {
 			totalFrames = (textureWidth / transform->width);
 			int currTime = static_cast<int>(SDL_GetTicks());
+
 			// TODO figure out how to see if animation is over
-			int col = (static_cast<int>((currTime / speed) % frames) + animationIndex) % totalFrames;
+			col = (static_cast<int>((currTime / speed) % frames) + animationIndex) % totalFrames;
 			srcRect.x = col * transform->width;
+
+			row = animationIndex / totalFrames;
+
+			//printf("row: %d, col: %d, total: %d, frames: %d\n", row, col, totalFrames, frames);
+			if (!repeat && (row * totalFrames) + col >= frames - 1) {
+				if (!animations[currAnimName].started) {
+					animations[currAnimName].started = false;
+				} else {
+					animations[currAnimName].started = false;
+					std::string next = animations[currAnimName].next;
+					printf("ANIM OVER!\n");
+					printf("name: %s, is null: %d\n", next.c_str(), !next.compare(""));
+					if (!next.compare("")) {
+						playAnim(next);
+					}
+				}
+			}
 		}
 
-		int row = animationIndex / totalFrames;
 		srcRect.y = row * transform->height;
 
 		destRect.x = static_cast<int>(transform->position.x - Game::camera.x);
@@ -98,10 +107,11 @@ public:
 		if (it != animations.end() && animName != currAnimName) {
 			currAnimName = animName;
 			animated = true;
+			animations[animName].started = true;
 			frames = animations[animName].frames;
 			animationIndex = animations[animName].index;
 			speed = animations[animName].speed;
-			delay = animations[animName].delay;
+			repeat = animations[animName].repeat;
 
 			auto it = std::find(anims.begin(), anims.end(), animName);
 			index = it - anims.begin();

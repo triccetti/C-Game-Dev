@@ -149,9 +149,11 @@
     <ClInclude Include="ECS.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameSelectScene.h" />
+    <ClInclude Include="UIHueSaturationValue.h" />
     <ClInclude Include="MainMenuScene.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="PresentFarmScene.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="SpriteComponent.h" />
     <ClInclude Include="UIButton.h" />

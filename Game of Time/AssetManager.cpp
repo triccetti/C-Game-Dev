@@ -101,7 +101,7 @@ std::string AssetManager::GetTerrain(int gid) {
 
 // REF: https://github.com/connorkuehl/sdl2-tiled-example/blob/master/src/level.cpp
 // REF: https://bitbucket.org/martingrant/tmxloader
-void AssetManager::LoadTileMap(std::string path, Scene* parent, SDL_Rect &mapSize) {
+void AssetManager::LoadTileMap(std::string path, Scene* parent, SDL_Rect * mapSize) {
 	tmx::Map map;
 
 	if (map.load(path)) {
@@ -117,8 +117,8 @@ void AssetManager::LoadTileMap(std::string path, Scene* parent, SDL_Rect &mapSiz
 		int tileWidth = tileDimensions.x;
 		printf("tile h: %d w: %d\n", tileHeight, tileWidth);
 
-		mapSize.h = tileHeight * mapHeight;
-		mapSize.w = tileWidth * mapWidth;
+		mapSize->h = tileHeight * mapHeight * 4;
+		mapSize->w = tileWidth * mapWidth * 4; // TODO this is the scale size...
 
 		// Add maps tilesets to textures
 		auto& mapTilesets = map.getTilesets();

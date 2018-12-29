@@ -5,15 +5,18 @@ struct Animation {
 	int index;
 	int frames;
 	int speed;
-	int delay;
+	bool repeat;
+	std::string next;
+	bool started = false;
 
 	Animation() {}
 
 	//	(startX, startY, frameWidth, frameHeight, frameDuration, frames, loop, reverse, scale)
-	Animation(int i, int f, int s, int d) {
+	Animation(int i, int f, int s, bool r = true, std::string n = "") {
 		index = i;
 		frames = f;
 		speed = s;
-		delay = d;
+		repeat = r;
+		next = n;
 	}
 };

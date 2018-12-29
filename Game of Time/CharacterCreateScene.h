@@ -14,6 +14,7 @@ public:
 
 	void init() override {
 		initialized = true;
+
 		Entity * back = &manager->createEntity<CharacterCreateScene>();
 		back->addComponent<UILabel>(40, 40, "<- Back", "vt323", WHITE);
 		back->addComponent<UIButton>([&]() {
@@ -22,28 +23,32 @@ public:
 			manager->prevScene();
 		});
 
+		Entity * hsv = &manager->createEntity<CharacterCreateScene>();
+		hsv->addComponent<UILabel>(600, 200, "Hair Color", "vt323", WHITE);
+		hsv->addComponent<UIHueSaturationValue>(720, 203, 18, 175);
+
 		name = &manager->createEntity<CharacterCreateScene>();
 		name->addComponent<UILabel>(100, 100, "Name", "vt323", WHITE);
 		name->addComponent<TextBoxComponent>(150, 100, 16, "vt323", WHITE, RED);
 
 		// TODO: 10 is a magic number add it to properties
 		playerSkin = &manager->createEntity<CharacterCreateScene>();
-		playerSkin->addComponent<TransformComponent>(350.0f, 125.0f, 32, 16, 10);
+		playerSkin->addComponent<TransformComponent>(-55.0f, -25.0f, 32, 16, 10);
 		playerSkin->addComponent<SpriteComponent>("skin1");
-		playerSkin->addComponent<UILabel>(200, 175, "Skin Color", "vt323", WHITE);
-		playerSkin->addComponent<UISelector>("skin", "vt323", 10, 500, 175, 325, 175);
+		playerSkin->addComponent<UILabel>(200, 230, "Skin Color", "vt323", WHITE);
+		playerSkin->addComponent<UISelector>("skin", "vt323", 10, 510, 230, 325, 230);
 
 		playerEyes = &manager->createEntity<CharacterCreateScene>();
-		playerEyes->addComponent<TransformComponent>(350.0f, 125.0f, 32, 16, 10);
+		playerEyes->addComponent<TransformComponent>(-55.0f, -25.0f, 32, 16, 10);
 		playerEyes->addComponent<SpriteComponent>("eyes1");
-		playerEyes->addComponent<UILabel>(200, 245, "Eyes", "vt323", WHITE);
-		playerEyes->addComponent<UISelector>("eyes", "vt323", 5, 500, 245, 325, 245);
+		playerEyes->addComponent<UILabel>(200, 260, "Eyes", "vt323", WHITE);
+		playerEyes->addComponent<UISelector>("eyes", "vt323", 5, 510, 260, 325, 260);
 
 		playerHair = &manager->createEntity<CharacterCreateScene>();
-		playerHair->addComponent<TransformComponent>(350.0f, 125.0f, 32, 16, 10);
+		playerHair->addComponent<TransformComponent>(-55.0f, -25.0f, 32, 16, 10);
 		playerHair->addComponent<SpriteComponent>("hair1");
 		playerHair->addComponent<UILabel>(200, 200, "Hair", "vt323", WHITE);
-		playerHair->addComponent<UISelector>("hair", "vt323", 3, 500, 200, 325, 200);
+		playerHair->addComponent<UISelector>("hair", "vt323", 10, 510, 200, 325, 200);
 
 		create = &manager->createEntity<CharacterCreateScene>();
 		create->addComponent<UILabel>(600, 550, "CREATE", "vt323", WHITE);
@@ -61,6 +66,7 @@ public:
 		});
 
 		back->addGroup(Game::groupUI);
+		hsv->addGroup(Game::groupUI);
 		name->addGroup(Game::groupUI);
 		playerSkin->addGroup(Game::groupUI);
 		playerEyes->addGroup(Game::groupUI);
@@ -82,7 +88,6 @@ public:
 
 private:
 	Entity* create;
-
 	Entity* name;
 
 	Entity* playerSkin;

@@ -76,7 +76,7 @@ void Game::init(const char* title, int width, int height, bool fullscreen) {
 		assets->AddTexture("eyes" + std::to_string(i), skinTexPath.c_str());
 	}
 
-	for (int i = 1; i <= 3; i++) {
+	for (int i = 1; i <= 10; i++) {
 		std::string skinTexPath = "Assets/hair" + std::to_string(i) + ".png";
 		assets->AddTexture("hair" + std::to_string(i), skinTexPath.c_str());
 	}
@@ -120,16 +120,10 @@ void Game::update() {
 		camera.x = 0;
 	if (camera.y < 0)
 		camera.y = 0;
-	if (camera.x > camera.w)
-		camera.x = camera.w;
-	if (camera.y > camera.h)
-		camera.y = camera.h;
-	if (camera.y + viewPort.h > camera.h)
-		camera.y = camera.h;
-	if (camera.x + viewPort.w > camera.w)
-		camera.x = camera.w;
-
-	printf("camera: %d, %d view: %d, %d \n", Game::camera.x, Game::camera.y, Game::viewPort.h, Game::viewPort.w);
+	if (camera.x + camera.w > viewPort.w)
+		camera.x = viewPort.w - camera.w;
+	if (camera.y + camera.h > viewPort.h)
+		camera.y = viewPort.h - camera.h;
 }
 
 void Game::render() {
